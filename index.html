@@ -205,6 +205,7 @@ footer ul{margin:6px 0 0;padding-left:1.2em}
     <ul>
       <li>給与収入のみの会社員。給与所得は簡易式（実際の早見表とは数百円ずれることがあります）。</li>
       <li>所得税は2026年分（基礎控除は合計所得489万円以下で104万円）、住民税は2027年度分（基礎控除43万円）の控除額で計算。</li>
+      <li>特例控除の割合は「住民税の課税総所得金額−人的控除差調整額−（所得税の基礎控除額−48万円）」で判定（横浜市の公表式）。</li>
       <li>住民税は都道府県・市町村ごとの端数処理を省略。所得金額調整控除、医療費控除、ひとり親控除、障害者控除などは含みません。</li>
       <li>住宅ローン控除は「控除対象の年末残高×0.7%」（最大35万円）。住民税から引ける上限は所得税の課税総所得金額等×5%（最高97,500円、2025年以前入居の基礎控除調整を含む）。</li>
       <li>iDeCoは2026年12月分（2027年1月引落し）から企業年金なしの会社員で月6.2万円まで。2026年中の控除は月2.3万円が上限です。</li>
@@ -300,7 +301,7 @@ function calc(st, o){
   const wari = Math.max(0, Math.floor(rtTaxable*0.10 - chosei));
   const loanCap = Math.min(Math.floor((itTaxable + Math.max(0, kIT-480000))*0.05), 97500);
   const loanRt = Math.min(Math.max(0, loanAmt-loanIt), loanCap, wari);
-  const x = rtTaxable - jin;
+  const x = rtTaxable - jin - Math.max(0, kIT-480000); // 令和8年度〜：所得税の基礎控除額−48万円も差し引いて税率を判定
   let rr, tokuRate;
   if (x < 0){ rr = 0; tokuRate = 0.90; } else { rr = bracket(x)[1]; tokuRate = 0.90 - rr*1.021; }
   const limit = wari>0 ? wari*0.2/tokuRate + 2000 : 0;
